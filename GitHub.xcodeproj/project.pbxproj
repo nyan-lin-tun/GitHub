@@ -29,9 +29,22 @@
 		46A03CE52DD47AC20063CC19 /* GitHubUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GitHubUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		46031BA62DD4EDFB00EEE02E /* Exceptions for "GitHub" folder in "GitHub" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 46A03CCA2DD47AC10063CC19 /* GitHub */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		46A03CCD2DD47AC10063CC19 /* GitHub */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				46031BA62DD4EDFB00EEE02E /* Exceptions for "GitHub" folder in "GitHub" target */,
+			);
 			path = GitHub;
 			sourceTree = "<group>";
 		};
@@ -294,6 +307,8 @@
 /* Begin XCBuildConfiguration section */
 		46A03CED2DD47AC20063CC19 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 46A03CCD2DD47AC10063CC19 /* GitHub */;
+			baseConfigurationReferenceRelativePath = Environments/Production.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -357,6 +372,8 @@
 		};
 		46A03CEE2DD47AC20063CC19 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 46A03CCD2DD47AC10063CC19 /* GitHub */;
+			baseConfigurationReferenceRelativePath = Environments/Production.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -413,6 +430,8 @@
 		};
 		46A03CF02DD47AC20063CC19 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 46A03CCD2DD47AC10063CC19 /* GitHub */;
+			baseConfigurationReferenceRelativePath = Environments/Production.xcconfig;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -423,6 +442,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GitHub/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -444,6 +464,8 @@
 		};
 		46A03CF12DD47AC20063CC19 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 46A03CCD2DD47AC10063CC19 /* GitHub */;
+			baseConfigurationReferenceRelativePath = Environments/Production.xcconfig;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -454,6 +476,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GitHub/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -475,6 +498,8 @@
 		};
 		46A03CF32DD47AC20063CC19 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 46A03CCD2DD47AC10063CC19 /* GitHub */;
+			baseConfigurationReferenceRelativePath = Environments/Production.xcconfig;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -494,6 +519,8 @@
 		};
 		46A03CF42DD47AC20063CC19 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 46A03CCD2DD47AC10063CC19 /* GitHub */;
+			baseConfigurationReferenceRelativePath = Environments/Production.xcconfig;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -513,6 +540,8 @@
 		};
 		46A03CF62DD47AC20063CC19 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 46A03CCD2DD47AC10063CC19 /* GitHub */;
+			baseConfigurationReferenceRelativePath = Environments/Production.xcconfig;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -530,6 +559,8 @@
 		};
 		46A03CF72DD47AC20063CC19 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 46A03CCD2DD47AC10063CC19 /* GitHub */;
+			baseConfigurationReferenceRelativePath = Environments/Production.xcconfig;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;

@@ -1,35 +1,108 @@
 //
-//  GitHubAPIServiceTests.swift
-//  GitHubTests
+//  ContentView.swift
+//  GitHub
 //
 //  Created by Nyan Lin Tun on 14/5/25.
 //
 
+@testable import GitHub
 import XCTest
 
 final class GitHubAPIServiceTests: XCTestCase {
+    var service: GitHubAPIService!
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    override func setUp() {
+        super.setUp()
+        let config = URLSessionConfiguration.ephemeral
+        config.protocolClasses = [MockURLProtocol.self]
+        let mockSession = URLSession(configuration: config)
+        service = GitHubAPIService()
+        service.session = mockSession
     }
 
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
-    }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+    func testFetchUsersReturnsExpectedUsers() async throws {
+        let expectedJSON = """
+        [
+            {
+                "login": "octocat",
+                "id": 1,
+                "avatar_url": "url"
+            }
+        ]
+        """
+        guard let url = URL(string: "https://api.github.com/users") else {
+            XCTFail("Invalid URL")
+            return
         }
+        MockURLProtocol.mockData = expectedJSON.data(using: .utf8)
+        MockURLProtocol.mockResponse = HTTPURLResponse(
+            url: url,
+            statusCode: 200,
+            httpVersion: nil,
+            headerFields: nil
+        )
+
+        let users = try await service.fetchUsers()
+        XCTAssertEqual(users.count, 1)
+        XCTAssertEqual(users.first?.login, "octocat")
+        XCTAssertEqual(users.first?.id, 1)
     }
 
+    func testFetchUserDetailReturnsExpectedDetail() async throws {
+        let expectedJSON = """
+        {
+            "login": "octocat",
+            "name": "The Octocat",
+            "avatar_url": "https://avatars.githubusercontent.com/u/1?v=4",
+            "followers": 100,
+            "following": 50
+        }
+        """
+        guard let url = URL(string: "https://api.github.com/users/octocat") else {
+            XCTFail("Invalid URL")
+            return
+        }
+        MockURLProtocol.mockData = expectedJSON.data(using: .utf8)
+        MockURLProtocol.mockResponse = HTTPURLResponse(
+            url: url,
+            statusCode: 200,
+            httpVersion: nil,
+            headerFields: nil
+        )
+
+        let detail = try await service.fetchUserDetail(username: "octocat")
+        XCTAssertEqual(detail.login, "octocat")
+        XCTAssertEqual(detail.name, "The Octocat")
+        XCTAssertEqual(detail.avatar_url, "https://avatars.githubusercontent.com/u/1?v=4")
+        XCTAssertEqual(detail.followers, 100)
+        XCTAssertEqual(detail.following, 50)
+    }
+
+    func testFetchUserRepositoriesReturnsExpectedRepos() async throws {
+        let expectedJSON = """
+        [
+            {
+                "id": 1296269,
+                "name": "Hello-World",
+                "full_name": "octocat/Hello-World",
+                "stargazers_count": 1
+            }
+        ]
+        """
+        guard let url = URL(string: "https://api.github.com/users/octocat/repos") else {
+            XCTFail("Invalid URL")
+            return
+        }
+        MockURLProtocol.mockData = expectedJSON.data(using: .utf8)
+        MockURLProtocol.mockResponse = HTTPURLResponse(
+            url: url,
+            statusCode: 200,
+            httpVersion: nil,
+            headerFields: nil
+        )
+
+        let repos = try await service.fetchUserRepositories(username: "octocat")
+        XCTAssertEqual(repos.count, 1)
+        XCTAssertEqual(repos.first?.name, "Hello-World")
+    }
 }
