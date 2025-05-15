@@ -13,14 +13,15 @@ struct UserListView: View {
         NavigationView {
             Group {
                 if viewModel.users.isEmpty && viewModel.isLoading {
-                    ProgressView("Loading GitHub Users…")
+                    ProgressView("Loading GitHub Users...")
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
-                    userList                }
+                    userList
+                }
             }
             .navigationTitle("GitHub Users")
             .task {
-                // Initial load
+                // MARK: - Initial load
                 if viewModel.users.isEmpty {
                     await viewModel.fetchUsers()
                 }
@@ -32,18 +33,18 @@ struct UserListView: View {
         List {
             ForEach(viewModel.users, id: \.id) { user in
                 NavigationLink {
-                    
+                    UserDetailView(username: user.login)
                 } label: {
                     UserRowView(user: user)
-                        .onAppear {
-                            if user == viewModel.users.last,
-                               !viewModel.isLoading {
-                                Task {
-                                    // MARK: - do pagination
-                                    await viewModel.fetchUsers()
-                                }
-                            }
+                }
+                .onAppear {
+                    if user == viewModel.users.last,
+                       !viewModel.isLoading {
+                        Task {
+                            // MARK: - do pagination
+                            await viewModel.fetchUsers()
                         }
+                    }
                 }
             }
             if viewModel.isLoading {
