@@ -7,6 +7,16 @@
 
 import Foundation
 
+protocol GitHubAPIServiceDelegate: AnyObject {
+    func fetchUsers(since userID: Int?) async throws -> [GitHubUser]
+    func fetchUserDetail(username: String) async throws -> GitHubUserDetail
+    func fetchUserRepositories(
+        username: String,
+        page: Int,
+        perPage: Int
+    ) async throws -> [GitHubRepository]
+}
+
 final class GitHubAPIService {
     static let shared = GitHubAPIService()
 
@@ -44,8 +54,17 @@ final class GitHubAPIService {
         return try JSONDecoder().decode(GitHubUserDetail.self, from: data)
     }
 
-    func fetchUserRepositories(username: String) async throws -> [GitHubRepository] {
-        guard let url = URL(string: "\(baseURL)/users/\(username)/repos") else {
+    func fetchUserRepositories(
+        username: String,
+        page: Int = 1,
+        perPage: Int = 30
+    ) async throws -> [GitHubRepository] {
+        var components = URLComponents(string: "\(baseURL)/users/\(username)/repos")
+        components?.queryItems = [
+            URLQueryItem(name: "page", value: "\(page)"),
+            URLQueryItem(name: "per_page", value: "\(perPage)")
+        ]
+        guard let url = components?.url else {
             throw URLError(.badURL)
         }
         let (data, _) = try await session.data(from: url)
