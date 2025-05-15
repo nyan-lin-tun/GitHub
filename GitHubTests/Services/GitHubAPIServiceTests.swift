@@ -73,7 +73,7 @@ final class GitHubAPIServiceTests: XCTestCase {
         let detail = try await service.fetchUserDetail(username: "octocat")
         XCTAssertEqual(detail.login, "octocat")
         XCTAssertEqual(detail.name, "The Octocat")
-        XCTAssertEqual(detail.avatar_url, "https://avatars.githubusercontent.com/u/1?v=4")
+        XCTAssertEqual(detail.avatarUrl, "https://avatars.githubusercontent.com/u/1?v=4")
         XCTAssertEqual(detail.followers, 100)
         XCTAssertEqual(detail.following, 50)
     }
