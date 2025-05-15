@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct GitHubRepository: Codable, Identifiable {
+struct GitHubRepository: Codable, Equatable, Identifiable {
     enum CodingKeys: String, CodingKey {
         case id
         case name
