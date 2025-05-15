@@ -7,12 +7,29 @@
 
 import SwiftUI
 
-struct UserItemView: View {
+struct UserRowView: View {
+    let user: GitHubUser
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        HStack {
+            AsyncImage(url: URL(string: user.avatarUrl)) { image in
+                image.resizable()
+            } placeholder: {
+                ProgressView()
+            }
+            .frame(width: 40, height: 40)
+            .clipShape(Circle())
+            Text(user.login)
+        }
     }
 }
 
 #Preview {
-    UserItemView()
+    UserRowView(
+        user: .init(
+            id: 1,
+            login: "Login Name",
+            avatarUrl: "https://avatars.githubusercontent.com/u/12773508?v=4"
+        )
+    )
 }
