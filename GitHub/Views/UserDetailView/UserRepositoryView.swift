@@ -27,6 +27,7 @@ struct UserRepositoryView: View {
                 Text(desc)
                     .font(.body)
                     .foregroundColor(.secondary)
+                    .multilineTextAlignment(.leading)
                     .fixedSize(horizontal: false, vertical: true)
             }
         }
