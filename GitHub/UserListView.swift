@@ -9,28 +9,43 @@ import SwiftUI
 
 struct UserListView: View {
     @StateObject private var viewModel = UserListViewModel()
-
-        var body: some View {
-            NavigationView {
-                List(viewModel.users) { user in
+    var body: some View {
+        NavigationView {
+            List {
+                ForEach(viewModel.users, id: \.id) { user in
                     HStack {
-                        AsyncImage(url: URL(string: user.avatar_url)) { image in
-                            image.resizable()
-                        } placeholder: {
-                            ProgressView()
-                        }
-                        .frame(width: 40, height: 40)
-                        .clipShape(Circle())
-
-                        Text(user.login)
+                        UserRowView(user: user)
+                            .onAppear {
+                                if user == viewModel.users.last {
+                                    Task {
+                                        // MARK: - do pagination
+                                        await viewModel.fetchUsers()
+                                    }
+                                }
+                            }
                     }
                 }
-                .navigationTitle("GitHub Users")
-                .task {
+                if viewModel.isLoading {
+                    loadingView
+                }
+            }
+            .navigationTitle("GitHub Users")
+            .task {
+                // Initial load
+                if viewModel.users.isEmpty {
                     await viewModel.fetchUsers()
                 }
             }
         }
+    }
+    
+    private var loadingView: some View {
+        HStack {
+            Spacer()
+            ProgressView()
+            Spacer()
+        }
+    }
 }
 
 #Preview {
