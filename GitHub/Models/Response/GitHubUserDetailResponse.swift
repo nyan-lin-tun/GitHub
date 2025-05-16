@@ -1,5 +1,5 @@
 //
-//  GitHubUserDetail.swift
+//  GitHubUserDetailResponse.swift
 //  GitHub
 //
 //  Created by Nyan Lin Tun on 14/5/25.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct GitHubUserDetail: Codable {
+struct GitHubUserDetailResponse: Codable {
     enum CodingKeys: String, CodingKey {
         case login
         case name
@@ -16,9 +16,9 @@ struct GitHubUserDetail: Codable {
         case following
     }
     
-    let login: String
+    let login: String?
     let name: String?
-    let avatarUrl: String
-    let followers: Int
-    let following: Int
+    let avatarUrl: String?
+    let followers: Int?
+    let following: Int?
 }
