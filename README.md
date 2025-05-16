@@ -38,3 +38,7 @@ That’s it! You now have a dedicated `Production.xcconfig` file in your **Envir
 - Open terminal
 - Enter command `cd ~/path/to/project`
 - Enter command `xed .`
+
+## Overall architecture
+
+![App Logo](Diagrams/architecture.png)
