@@ -18,9 +18,7 @@ protocol GitHubAPIServiceDelegate: AnyObject {
 }
 
 final class GitHubAPIService: GitHubAPIServiceDelegate {
-    private let baseURL = "https://api.github.com"
-    var session: URLSession
-
+    private var session: URLSession
     private let token = AppConfig.appToken
 
     init() {
@@ -33,7 +31,7 @@ final class GitHubAPIService: GitHubAPIServiceDelegate {
     }
     
     func fetchUsers(since userID: Int? = nil) async throws -> [GitHubUserResponse] {
-        var urlString = "\(baseURL)/users"
+        var urlString = GitHubApiRoutes.Endpoint.users.stringValue
         if let id = userID {
             urlString += "?since=\(id)"
         }
@@ -45,7 +43,8 @@ final class GitHubAPIService: GitHubAPIServiceDelegate {
     }
     
     func fetchUserDetail(username: String) async throws -> GitHubUserDetailResponse {
-        guard let url = URL(string: "\(baseURL)/users/\(username)") else {
+        let urlString = GitHubApiRoutes.Endpoint.details(username).stringValue
+        guard let url = URL(string: urlString) else {
             throw URLError(.badURL)
         }
         let (data, _) = try await session.data(from: url)
@@ -57,7 +56,8 @@ final class GitHubAPIService: GitHubAPIServiceDelegate {
         page: Int = 1,
         perPage: Int = 30
     ) async throws -> [GitHubRepositoryResponse] {
-        var components = URLComponents(string: "\(baseURL)/users/\(username)/repos")
+        let urlString = GitHubApiRoutes.Endpoint.repositories(username).stringValue
+        var components = URLComponents(string: urlString)
         components?.queryItems = [
             URLQueryItem(name: "page", value: "\(page)"),
             URLQueryItem(name: "per_page", value: "\(perPage)")
