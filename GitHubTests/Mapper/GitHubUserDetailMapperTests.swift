@@ -5,8 +5,8 @@
 //  Created by Nyan Lin Tun on 16/5/25.
 //
 
-import XCTest
 @testable import GitHub
+import XCTest
 
 final class GitHubUserDetailMapperTests: XCTestCase {
     private var mapper: GitHubUserDetailMapper!
