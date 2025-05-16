@@ -19,6 +19,10 @@ enum Plist {
 }
 
 enum AppConfig {
+    static var baseUrl: String {
+        return "https://api.github.com"
+    }
+    
     static var appToken: String {
         return configuration(.appToken)
     }
