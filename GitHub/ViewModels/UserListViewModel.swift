@@ -17,6 +17,12 @@ final class UserListViewModel: UserListViewModelDelegate, ObservableObject {
     @Published var isLoading = false
     @Published var errorMessage: String?
     
+    private var githubApiServiceUseCase: GitHubAPIServiceUseCaseDelegate
+    
+    init(githubApiServiceUseCase: GitHubAPIServiceUseCaseDelegate = GitHubAPIServiceUseCase()) {
+        self.githubApiServiceUseCase = githubApiServiceUseCase
+    }
+    
     func fetchUsers() async {
         guard !isLoading else {
             return
@@ -24,7 +30,7 @@ final class UserListViewModel: UserListViewModelDelegate, ObservableObject {
         isLoading = true
         do {
             let lastID = users.last?.id
-            let newUsers = try await GitHubAPIService.shared.fetchUsers(since: lastID)
+            let newUsers = try await githubApiServiceUseCase.fetchUsers(since: lastID)
             self.users += newUsers
         } catch {
             self.errorMessage = error.localizedDescription
