@@ -18,7 +18,7 @@ protocol GitHubAPIServiceDelegate: AnyObject {
 }
 
 final class GitHubAPIService: GitHubAPIServiceDelegate {
-    private var session: URLSession
+    var session: URLSession
     private let token = AppConfig.appToken
 
     init() {
