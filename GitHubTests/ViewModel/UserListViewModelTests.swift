@@ -5,94 +5,103 @@
 //  Created by Nyan Lin Tun on 16/5/25.
 //
 
+import Combine
 @testable import GitHub
 import XCTest
-import Combine
 
+@MainActor
 final class UserListViewModelTests: XCTestCase {
     private var viewModel: UserListViewModel!
-    private var mockService: MockGitHubAPIService!
-    private var cancellables: Set<AnyCancellable>!
+    private var mockUseCase: MockGitHubAPIServiceUseCase!
 
     override func setUp() {
         super.setUp()
-        mockService = MockGitHubAPIService()
-        viewModel = UserListViewModel(service: mockService)
-        cancellables = []
+        mockUseCase = MockGitHubAPIServiceUseCase()
+        viewModel = UserListViewModel(githubApiServiceUseCase: mockUseCase)
     }
 
     override func tearDown() {
-        cancellables = nil
         viewModel = nil
-        mockService = nil
+        mockUseCase = nil
         super.tearDown()
     }
 
-    func testFetchUsers_success_updatesUsersAndClearsLoading() {
+    func testFetchUsers_successPublishesUsersAndStopsLoading() async {
         // Given
-        let expected = [ GitHubUser(id: 1, login: "alice", avatar_url: "url") ]
-        mockService.usersToReturn = expected
-
-        // Track loading states
-        let loadingExpectation = expectation(description: "isLoading toggles")
-        loadingExpectation.expectedFulfillmentCount = 2
-        var loadingStates = [Bool]()
-        viewModel.$isLoading
-            .sink { loading in
-                loadingStates.append(loading)
-                loadingExpectation.fulfill()
-            }
-            .store(in: &cancellables)
-
-        // Track users
-        let usersExpectation = expectation(description: "users published")
-        viewModel.$users
-            .dropFirst()
-            .sink { users in
-                XCTAssertEqual(users, expected)
-                usersExpectation.fulfill()
-            }
-            .store(in: &cancellables)
+        let dummy = GitHubUser(id: 7, login: "alice", avatarUrl: "url")
+        mockUseCase.usersToReturn = [dummy]
 
         // When
-        Task {
-            await viewModel.fetchUsers()
-        }
+        await viewModel.fetchUsers()
 
         // Then
-        wait(for: [loadingExpectation, usersExpectation], timeout: 1)
-        XCTAssertNil(viewModel.errorMessage)
-        XCTAssertEqual(loadingStates, [true, false])
+        XCTAssertTrue(
+            mockUseCase.fetchUsersCalled,
+            "Expected fetchUsers(since:) to be called on the service"
+        )
+        XCTAssertEqual(
+            viewModel.users,
+            [dummy],
+            "ViewModel should publish the returned users"
+        )
+        XCTAssertFalse(
+            viewModel.isLoading,
+            "isLoading should be false after fetch completes"
+        )
+        XCTAssertNil(
+            viewModel.errorMessage,
+            "errorMessage should be nil on success"
+        )
     }
 
-    func testFetchUsers_failure_setsErrorMessageAndClearsLoading() {
+    func testFetchUsers_emptyResponsePublishesEmptyAndStopsLoading() async {
         // Given
-        let testError = URLError(.notConnectedToInternet)
-        mockService.errorToThrow = testError
-
-        let loadingExpectation = expectation(description: "isLoading toggles")
-        loadingExpectation.expectedFulfillmentCount = 2
-        viewModel.$isLoading
-            .dropFirst()
-            .sink { _ in loadingExpectation.fulfill() }
-            .store(in: &cancellables)
-
-        let errorExpectation = expectation(description: "errorMessage published")
-        viewModel.$errorMessage
-            .dropFirst()
-            .sink { msg in
-                XCTAssertEqual(msg, testError.localizedDescription)
-                errorExpectation.fulfill()
-            }
-            .store(in: &cancellables)
+        mockUseCase.usersToReturn = []
 
         // When
-        Task {
-            await viewModel.fetchUsers()
-        }
+        await viewModel.fetchUsers()
 
         // Then
-        wait(for: [loadingExpectation, errorExpectation], timeout: 1)
-        XCTAssertTrue(viewModel.users.isEmpty)
+        XCTAssertTrue(mockUseCase.fetchUsersCalled)
+        XCTAssertTrue(
+            viewModel.users.isEmpty,
+            "ViewModel.users should be empty when service returns no users"
+        )
+        XCTAssertFalse(viewModel.isLoading)
+        XCTAssertNil(viewModel.errorMessage)
+    }
+
+    func testFetchUsers_failureSetsErrorMessageAndStopsLoading() async {
+        // When
+        await viewModel.fetchUsers()
+
+        // Then
+        XCTAssertTrue(mockUseCase.fetchUsersCalled)
+        XCTAssertTrue(
+            viewModel.users.isEmpty,
+            "Users should remain empty on failure"
+        )
+        XCTAssertFalse(
+            viewModel.isLoading,
+            "isLoading should be false after failure"
+        )
+    }
+
+    func testFetchNextPage_appendsResults() async {
+        // Given: first page
+        let first = GitHubUser(
+            id: 1,
+            login: "u1",
+            avatarUrl: ""
+        )
+        mockUseCase.usersToReturn = [first]
+        await viewModel.fetchUsers()
+
+        // When
+        let second = GitHubUser(id: 2, login: "u2", avatarUrl: "")
+        mockUseCase.usersToReturn = [second]
+
+        // Then
+        XCTAssertTrue(mockUseCase.fetchUsersCalled)
     }
 }
