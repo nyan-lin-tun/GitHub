@@ -13,9 +13,9 @@ struct GitHubUser: Identifiable, Equatable {
     let avatarUrl: String
     
     init(
-        id: Int,
-        login: String,
-        avatarUrl: String
+        id: Int = -1,
+        login: String = "",
+        avatarUrl: String = ""
     ) {
         self.id = id
         self.login = login

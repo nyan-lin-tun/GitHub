@@ -5,7 +5,6 @@
 //  Created by Nyan Lin Tun on 16/5/25.
 //
 
-
 import Foundation
 
 struct GitHubRepository: Equatable, Identifiable {
@@ -18,13 +17,13 @@ struct GitHubRepository: Equatable, Identifiable {
     let htmlUrl: String
     
     init(
-        id: Int,
-        name: String,
-        language: String,
-        starsCount: Int,
-        description: String,
-        fork: Bool,
-        htmlUrl: String
+        id: Int = -1,
+        name: String = "",
+        language: String = "",
+        starsCount: Int = 0,
+        description: String = "",
+        fork: Bool = false,
+        htmlUrl: String = ""
     ) {
         self.id = id
         self.name = name

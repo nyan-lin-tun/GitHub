@@ -15,11 +15,11 @@ struct GitHubUserDetail: Equatable {
     let following: Int
     
     init(
-        login: String,
-        name: String,
-        avatarUrl: String,
-        followers: Int,
-        following: Int
+        login: String = "",
+        name: String = "",
+        avatarUrl: String = "",
+        followers: Int = 0,
+        following: Int = 0
     ) {
         self.login = login
         self.name = name
