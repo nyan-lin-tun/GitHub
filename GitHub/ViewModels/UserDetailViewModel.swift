@@ -22,14 +22,19 @@ final class UserDetailViewModel: UserDetailViewModelDelegate, ObservableObject {
     private var currentPage = 1
     private let perPage = 30
     private var hasMoreRepos = true
-
+    private var githubApiServiceUseCase: GitHubAPIServiceUseCaseDelegate
+    
+    init(githubApiServiceUseCase: GitHubAPIServiceUseCaseDelegate = GitHubAPIServiceUseCase()) {
+        self.githubApiServiceUseCase = githubApiServiceUseCase
+    }
+    
     func fetchUserDetail(username: String) async {
         // Reset pagination when loading a new user
         currentPage = 1
         hasMoreRepos = true
         repos = []
         do {
-            userDetail = try await GitHubAPIService.shared.fetchUserDetail(username: username)
+            userDetail = try await githubApiServiceUseCase.fetchUserDetail(username: username)
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -46,10 +51,10 @@ final class UserDetailViewModel: UserDetailViewModelDelegate, ObservableObject {
         }
 
         do {
-            let batch = try await GitHubAPIService.shared
+            let batch = try await githubApiServiceUseCase
                 .fetchUserRepositories(username: username, page: currentPage, perPage: perPage)
             let filtered = batch.filter {
-                !($0.fork ?? false)
+                !$0.fork
             }
             if currentPage == 1 {
                 repos = filtered
