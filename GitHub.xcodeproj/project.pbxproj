@@ -33,6 +33,7 @@
 		46031BA62DD4EDFB00EEE02E /* Exceptions for "GitHub" folder in "GitHub" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Environments/Production.xcconfig,
 				Info.plist,
 			);
 			target = 46A03CCA2DD47AC10063CC19 /* GitHub */;
