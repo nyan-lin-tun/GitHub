@@ -8,18 +8,16 @@
 import Foundation
 
 protocol GitHubAPIServiceDelegate: AnyObject {
-    func fetchUsers(since userID: Int?) async throws -> [GitHubUser]
-    func fetchUserDetail(username: String) async throws -> GitHubUserDetail
+    func fetchUsers(since userID: Int?) async throws -> [GitHubUserResponse]
+    func fetchUserDetail(username: String) async throws -> GitHubUserDetailResponse
     func fetchUserRepositories(
         username: String,
         page: Int,
         perPage: Int
-    ) async throws -> [GitHubRepository]
+    ) async throws -> [GitHubRepositoryResponse]
 }
 
-final class GitHubAPIService {
-    static let shared = GitHubAPIService()
-
+final class GitHubAPIService: GitHubAPIServiceDelegate {
     private let baseURL = "https://api.github.com"
     var session: URLSession
 
@@ -34,7 +32,7 @@ final class GitHubAPIService {
         session = URLSession(configuration: config)
     }
     
-    func fetchUsers(since userID: Int? = nil) async throws -> [GitHubUser] {
+    func fetchUsers(since userID: Int? = nil) async throws -> [GitHubUserResponse] {
         var urlString = "\(baseURL)/users"
         if let id = userID {
             urlString += "?since=\(id)"
@@ -43,22 +41,22 @@ final class GitHubAPIService {
             throw URLError(.badURL)
         }
         let (data, _) = try await session.data(from: url)
-        return try JSONDecoder().decode([GitHubUser].self, from: data)
+        return try JSONDecoder().decode([GitHubUserResponse].self, from: data)
     }
     
-    func fetchUserDetail(username: String) async throws -> GitHubUserDetail {
+    func fetchUserDetail(username: String) async throws -> GitHubUserDetailResponse {
         guard let url = URL(string: "\(baseURL)/users/\(username)") else {
             throw URLError(.badURL)
         }
         let (data, _) = try await session.data(from: url)
-        return try JSONDecoder().decode(GitHubUserDetail.self, from: data)
+        return try JSONDecoder().decode(GitHubUserDetailResponse.self, from: data)
     }
 
     func fetchUserRepositories(
         username: String,
         page: Int = 1,
         perPage: Int = 30
-    ) async throws -> [GitHubRepository] {
+    ) async throws -> [GitHubRepositoryResponse] {
         var components = URLComponents(string: "\(baseURL)/users/\(username)/repos")
         components?.queryItems = [
             URLQueryItem(name: "page", value: "\(page)"),
@@ -68,6 +66,6 @@ final class GitHubAPIService {
             throw URLError(.badURL)
         }
         let (data, _) = try await session.data(from: url)
-        return try JSONDecoder().decode([GitHubRepository].self, from: data)
+        return try JSONDecoder().decode([GitHubRepositoryResponse].self, from: data)
     }
 }
