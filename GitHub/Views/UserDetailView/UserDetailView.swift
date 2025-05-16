@@ -58,9 +58,8 @@ struct UserDetailView: View {
     
     private func userRepositoryView(repo: GitHubRepository) -> some View {
         Group {
-            if let urlString = repo.htmlUrl,
-               let url = URL(string: urlString) {
-                NavigationLink(destination: webView(url, repoName: repo.name ?? "")) {
+            if let url = URL(string: repo.htmlUrl) {
+                NavigationLink(destination: webView(url, repoName: repo.name)) {
                     UserRepositoryView(repo: repo)
                 }
             } else {
@@ -86,10 +85,8 @@ struct UserDetailView: View {
             .clipShape(Circle())
             Text(detail.login)
                 .font(.title.weight(.bold))
-            if let fullName = detail.name {
-                Text(fullName)
-                    .font(.headline)
-            }
+            Text(detail.name)
+                .font(.headline)
             HStack {
                 Text("Followers: \(detail.followers)")
                 Spacer()

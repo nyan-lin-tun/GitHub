@@ -12,24 +12,20 @@ struct UserRepositoryView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(repo.name ?? "")
+            Text(repo.name)
                 .font(.headline)
             HStack {
-                if let lang = repo.language {
-                    Text(lang)
-                }
+                Text(repo.language)
                 Spacer()
-                Text("★ \(repo.stargazersCount ?? 0)")
+                Text("★ \(repo.starsCount)")
             }
             .font(.subheadline)
             .foregroundColor(.secondary)
-            if let desc = repo.description {
-                Text(desc)
-                    .font(.body)
-                    .foregroundColor(.secondary)
-                    .multilineTextAlignment(.leading)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
+            Text(repo.description)
+                .font(.body)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.leading)
+                .fixedSize(horizontal: false, vertical: true)
         }
         .padding(.vertical, 8)
     }
@@ -41,7 +37,7 @@ struct UserRepositoryView: View {
             id: 1,
             name: "Test",
             language: "en",
-            stargazersCount: 100,
+            starsCount: 100,
             description: "Test description",
             fork: true,
             htmlUrl: ""
