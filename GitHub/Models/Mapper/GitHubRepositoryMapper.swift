@@ -18,7 +18,7 @@ struct GitHubRepositoryMapper: ModelMapper {
             language: input.language ?? "",
             starsCount: input.stargazersCount ?? 0,
             description: input.description ?? "",
-            fork: input.description ?? false,
+            fork: input.fork ?? false,
             htmlUrl: input.htmlUrl ?? ""
         )
     }

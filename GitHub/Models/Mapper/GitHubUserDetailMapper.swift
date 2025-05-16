@@ -14,10 +14,10 @@ struct GitHubUserDetailMapper: ModelMapper {
     func map(input: GitHubUserDetailResponse) -> GitHubUserDetail {
         .init(
             login: input.login ?? "",
-              name: input.name ?? "",
-              avatarUrl: input.avatarUrl ?? "",
-              followers: input.followers ?? 0,
-              following: input.following ?? 0
+            name: input.name ?? "",
+            avatarUrl: input.avatarUrl ?? "",
+            followers: input.followers ?? 0,
+            following: input.following ?? 0
         )
     }
 }
